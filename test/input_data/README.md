@@ -19,3 +19,4 @@ This directory contains non-sensitive sample data to run and test the repository
 * `funscan_argnorm/deeparg/SAMPLE-001.ARG.normalized.tsv`
 * `funscan_argnorm/deeparg/SAMPLE-002.potential.ARG.normalized.tsv`
 * `mag_hamronization/hamronization_combined_report.sample.tsv`
+* `qcbins_mag/SAMPLE-bin_summary.tsv`

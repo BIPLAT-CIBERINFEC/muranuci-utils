@@ -1,0 +1,3 @@
+Bin Id	Assembly	Completeness	Contamination	N50	# predicted rRNA genes
+MEGAHIT-MaxBin2-COMUNITY-1.001	MEGAHIT-MaxBin2-COMUNITY-1.001.fa	97.86	4.9	81342	4 + 0 part
+MEGAHIT-MaxBin2-COMUNITY-1.002	MEGAHIT-MaxBin2-COMUNITY-1.002.fa	95.33	0.87	116581	5 + 0 part

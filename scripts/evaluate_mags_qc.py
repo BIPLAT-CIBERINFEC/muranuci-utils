@@ -25,17 +25,31 @@ from typing import Optional
 
 import pandas as pd
 
-
-def extract_sample(bin_id: str) -> str:
-    """Extract sample name from ``bin_id``.
-
-    Tries to match the pattern 'MEGAHIT-<something>-<SAMPLE>.<bin>'. Returns
-    'UNKNOWN' if it does not match.
-    """
+def extract_sample_info(bin_id: str) -> dict:
+    """Extract assembler, binner, sample and id from bin_id string."""
     if not isinstance(bin_id, str):
-        return "UNKNOWN"
-    match = re.search(r"MEGAHIT-[^/]+?-([^-]+(?:-[^-]+)*?)\.\d{1,3}(?:\.fa)?$", bin_id)
-    return match.group(1) if match else "UNKNOWN"
+        return {"assembler": None, "binner": None, "Sample": None, "id": None}
+     # Split by dot
+    parts_dot = bin_id.split(".")
+    if len(parts_dot) == 1:
+        left = parts_dot[0]
+        bin_id_only = None
+    else:
+        left = parts_dot[0]
+        bin_id_only = parts_dot[-1]
+    # Split left part by hyphen
+    parts = left.split("-")
+    if len(parts) < 3:
+        return {"assembler": None, "binner": None, "Sample": None, "id": None}
+    assembler = parts[0]
+    binner = parts[1]
+    sample = "-".join(parts[2:])
+    return {
+        "assembler": assembler,
+        "binner": binner,
+        "Sample": sample,
+        "id": bin_id_only
+    }
 
 
 def load_data(checkm_file: str, quast_file: str):
@@ -143,9 +157,8 @@ def main():
         else:   
             raise SystemExit("El TSV debe contener la columna 'Bin Id' o 'bin'.")
     df = df.copy()
-    df["Sample"] = df["Bin Id"].apply(extract_sample)
-    cols = ["Sample"] + [c for c in df.columns if c != "Sample"]
-    df = df[cols]
+    sample_info = df["Bin Id"].apply(extract_sample_info).apply(pd.Series)
+    df = pd.concat([df, sample_info], axis=1)
 
     # rRNA total
     rrna_col = "# predicted rRNA genes"

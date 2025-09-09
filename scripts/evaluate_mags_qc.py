@@ -137,7 +137,11 @@ def main():
 
     # Extract sample name from 'Bin Id'
     if "Bin Id" not in df.columns:
-        raise SystemExit("El TSV debe contener la columna 'Bin Id'.")
+        if 'bin' in df.columns:
+            print("Creando columna 'Bin Id' a partir de 'bin'.")
+            df["Bin Id"] = df["bin"].astype(str).str.replace(r"\.fa$", "", regex=True) 
+        else:   
+            raise SystemExit("El TSV debe contener la columna 'Bin Id' o 'bin'.")
     df = df.copy()
     df["Sample"] = df["Bin Id"].apply(extract_sample)
     cols = ["Sample"] + [c for c in df.columns if c != "Sample"]

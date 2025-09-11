@@ -26,7 +26,7 @@ from typing import Optional
 import pandas as pd
 
 def extract_sample_info(bin_id: str) -> dict:
-    """Extract assembler, binner, sample and id from bin_id string."""
+    """Extract assembler, binner, sample, id and DAStool_evaluation from bin_id string."""
     if not isinstance(bin_id, str):
         return {"assembler": None, "binner": None, "Sample": None, "id": None}
      # Split by dot
@@ -44,11 +44,19 @@ def extract_sample_info(bin_id: str) -> dict:
     assembler = parts[0]
     binner = parts[1]
     sample = "-".join(parts[2:])
+    # Procesar binner y DAStool
+    if isinstance(binner, str) and "Refined" in binner:
+        binner_clean = binner.replace("Refined", "").strip()
+        dastool = "Refined"
+    else:
+        binner_clean = binner
+        dastool = "No refined"
     return {
         "assembler": assembler,
         "binner": binner,
         "Sample": sample,
-        "id": bin_id_only
+        "id": bin_id_only,
+        "DAStool_evaluation": dastool 
     }
 
 
